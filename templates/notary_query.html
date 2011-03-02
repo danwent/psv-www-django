@@ -1,0 +1,102 @@
+<html> 
+<head>
+<title> Perpsectives Notary Demo: SSL Host Key Records </title>  
+<link rel="stylesheet" type="text/css" href="/style.css" /> 
+</head>
+<body> 
+<center>
+<table width="100%"> 
+<tr> 
+<td width="25%"> <a href="/">
+<div class="quick_link"> Perspectives Home </div></a> </td>
+<td width="25%"> <a href="/firefox.html">
+<div class="quick_link"> Firefox Extension </div></a> </td>
+<td width="25%">
+<div class="quick_link"> Web Demo </div> </td>
+</tr>
+</table> 
+</center>
+
+<h1> Perpsectives Notary Demo: SSL Host Key Records </h1> 
+<p> This is a simple web interface to query Perspective's overlay
+of "network notary" servers.  Network notaries let you see a 
+diverse views of the public key(s) used by an HTTPS server over time.  
+</p> 
+<p> To learn more about the Perspectives project, see the 
+<a href="/"> main project page </a> .
+</p>
+<hr> 
+<h4> Query Perspectives Notaries </h4> 
+
+<div style="padding: 10px;">
+    <form method="GET" action="notary_query">
+  <table cellpadding="5px" > 
+  <tr> 
+  <td> Host:</td><td> <input type="text" name="host" value="{{host}}" size="30" /> </td>
+  </tr> 
+  <tr>
+  <td> Port: </td><td> <input type="text" name="port" value="{{port}}" size="5" /> 
+  &nbsp; &nbsp; &nbsp; Default port for HTTPS is 443.<br/></td>
+  </tr>
+  <tr> 
+  <td id="warning_row">   </td>
+  <td> <input value="Get Notary Results" type="submit"/></td>
+ </tr> 
+ <tr>
+  </table> 
+  </form>
+  <div style="clear: both;"/>
+</div>
+  <hr/>
+
+{% if notary_server_list %} 
+        <h3> Results for {{host}}:{{port}}</h3> 
+        <ul>
+        <li><a href="#10days">10-day key history timeline</a></li> 
+        <li><a href="#200days">200-day key history timeline</a></li> 
+        <li><a href="#details">Detailed ouput showing all notary data.</a></li> 
+        <li><a href="#notes">FAQ</a></li> 
+        </ul>
+      <a name="10days"/>
+        <h4> 10-day Key History </h3>
+         <p><embed width="900" height="300" 
+		src="/notary_web/notary_svg/{{host}}/{{port}}/10.svg" 
+		alt="browser must support SVG"/></p>
+
+        <a name="200days"/> 
+        <h4> 200-day Key History </h3>
+         <p><embed width="900" height="300" 
+		src="/notary_web/notary_svg/{{host}}/{{port}}/200.svg" 
+		alt="browser must support SVG"/></p>
+
+        <a name="details"/>
+        <h4> Detailed Notary Results </h3>
+        <pre>{{ full_text }}</pre>
+{% else %} 
+        <h3> No Results Available </h3> 
+{% if port != 443 %}  
+         <p>Warning: {{port}} is a non-standard port for HTTPS, did you mean to use 443 instead? </p> 
+{% endif %} 
+
+	<p> Is host '{{host}}' reachable from the public Internet?  Could it be behind a firewall? </p> 
+{% endif %} 
+<hr> 
+<a name="notes" /> 
+<h4> Frequently Asked Questions (FAQ) </h4> 
+<ol> 
+<li> Keys are shown as 128-bit MD5 hashes.  This is identical to the "key fingerprint" that you 
+see for unauthenticated keys in SSH.  For HTTPS, Firefox and Safari will 
+show you the MD5 fingerprint if you view the details of a certificate. </li> 
+<li> Note: If you get results that contain [NULL LIST] that means some servers did not have any
+results for your service.  The notary servers do probe "on demand" when you request, but if some
+servers did not reply, issue the query again, as the local client may have timed-out before the 
+notaries finished probing for the key.  If you continue to get no results and you are sure that the
+host is reachable, please contact us.  
+</li> 
+<li> Notaries only keep history
+for services that have been requested in the past, so when you first query a
+about a service, there may be no history.
+</li>
+</ol>
+</body> 
+</html> 
